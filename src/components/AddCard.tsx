@@ -52,7 +52,7 @@ export default function AddCard({
             <motion.button
               layout
               type="submit"
-              className="px-3 py-2 text-xs text-neutral-400 transition-all hover:text-neutral-50"
+              className="px-3 py-2 text-xs bg-indigo-500 rounded text-neutral-400 transition-all hover:text-neutral-50"
             >
               Add
             </motion.button>

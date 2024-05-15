@@ -1,10 +1,23 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import KanbanColumn from "./KanbanColumn";
-import { Card, DEFAULT_CARDS } from "../globals/globals";
+import { Card } from "../globals/globals";
 import DeleteArea from "./DeleteArea";
 
 export default function Kanban() {
-  const [cards, setCards] = useState<Card[]>(DEFAULT_CARDS);
+  const [cards, setCards] = useState<Card[]>([]);
+  const [check, setCheck] = useState(false);
+
+  useEffect(() => {
+    if (check) {
+      localStorage.setItem("cards", JSON.stringify(cards));
+    }
+  }, [cards]);
+  useEffect(() => {
+    const cardData = localStorage.getItem("cards");
+
+    setCards(cardData ? JSON.parse(cardData) : []);
+    setCheck(true);
+  }, []);
   return (
     <div className="h-screen w-full bg-indigo-950 text-slate-100">
       <div className="flex h-full w-full gap-3 overflow-scroll p-12">
