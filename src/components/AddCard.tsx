@@ -1,7 +1,7 @@
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Dispatch, FormEvent, SetStateAction, useState } from "react";
-import { Card } from "../globals/globals";
+import { Card } from "../globals/types";
 import { motion } from "framer-motion";
 
 export default function AddCard({

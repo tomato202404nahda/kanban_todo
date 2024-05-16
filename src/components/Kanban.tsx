@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import KanbanColumn from "./KanbanColumn";
-import { Card } from "../globals/globals";
+import { Card } from "../globals/types";
 import DeleteArea from "./DeleteArea";
 
 export default function Kanban() {
@@ -19,8 +19,8 @@ export default function Kanban() {
     setCheck(true);
   }, []);
   return (
-    <div className="h-screen w-full bg-indigo-950 text-slate-100">
-      <div className="flex h-full w-full gap-3 overflow-scroll p-12">
+    <div className="h-full overflow-auto bg-indigo-950 text-slate-100">
+      <div className="flex h-full w-full gap-3  p-12">
         <KanbanColumn
           title="Backlog"
           headingColor="text-slate-200"

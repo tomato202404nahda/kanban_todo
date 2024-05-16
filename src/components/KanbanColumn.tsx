@@ -1,5 +1,5 @@
 import { Dispatch, DragEvent, SetStateAction, useState } from "react";
-import { Card } from "../globals/globals";
+import { Card } from "../globals/types";
 import ColumnCard from "./ColumnCard";
 import AddCard from "./AddCard";
 import DropIndicator from "./DropIndicator";
@@ -119,7 +119,7 @@ export default function KanbanColumn(props: Props) {
   });
 
   return (
-    <div className="w-56 shrink-0">
+    <div className="w-56 h-auto  shrink-0 box-content">
       <div className="mb-3 flex items-center justify-between">
         <h3 className={`font-medium ${props.headingColor}`}>{props.title}</h3>
         <span className="rounded text-sm text-neutral-400">
@@ -130,7 +130,7 @@ export default function KanbanColumn(props: Props) {
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        className={`h-full w-full transition-all ${
+        className={`h-full w-full no-scroll grow overflow-y-auto transition-all ${
           active ? "bg-neutral-800/50" : "bg-neutral-800"
         }`}
       >

@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrashAlt } from "@fortawesome/free-regular-svg-icons";
 import { faFire } from "@fortawesome/free-solid-svg-icons";
-import { Card } from "../globals/globals";
+import { Card } from "../globals/types";
 
 type Props = {
   setCards: Dispatch<SetStateAction<Card[]>>;

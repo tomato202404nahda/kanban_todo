@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Card } from "../globals/globals";
+import { Card } from "../globals/types";
 import DropIndicator from "./DropIndicator";
 type Props = {
   card: Card;
