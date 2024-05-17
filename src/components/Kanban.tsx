@@ -1,23 +1,44 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import KanbanColumn from "./KanbanColumn";
 import { Card } from "../globals/types";
 import DeleteArea from "./DeleteArea";
+import { UserContext } from "../App";
+import { onValue, push, ref, set } from "firebase/database";
+import { db } from "../config/firebase.config";
 
 export default function Kanban() {
+  const { user, setUser } = useContext(UserContext);
   const [cards, setCards] = useState<Card[]>([]);
   const [check, setCheck] = useState(false);
 
   useEffect(() => {
     if (check) {
-      localStorage.setItem("cards", JSON.stringify(cards));
+      try {
+        const usersRef = ref(db, "users");
+        const newDataRef = push(usersRef);
+
+        set(newDataRef, {
+          uid: user.userId,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      // localStorage.setItem("cards", JSON.stringify(cards));
     }
   }, [cards]);
-  useEffect(() => {
-    const cardData = localStorage.getItem("cards");
 
-    setCards(cardData ? JSON.parse(cardData) : []);
+  useEffect(() => {
+    const cardDataRef = ref(db, "kanbans/" + JSON.stringify(user.userId));
+    let cardData: Card[] | null = null;
+    console.log(cardDataRef);
+    onValue(cardDataRef, (snaps) => {
+      cardData = JSON.parse(snaps.val());
+    });
+
+    setCards(cardData ? cardData : []);
     setCheck(true);
   }, []);
+
   return (
     <div className="h-full overflow-auto bg-indigo-950 text-slate-100">
       <div className="flex h-full w-full gap-3  p-12">

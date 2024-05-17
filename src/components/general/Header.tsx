@@ -3,16 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../../config/firebase.config";
 import { User } from "../../globals/types";
-import { createRef, useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "../../App";
-
+import {
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
+  Transition,
+} from "@headlessui/react";
 import Generic from "../../assets/generic.webp";
 
 export default function Header() {
   const navigator = useNavigate();
   const { user, setUser } = useContext(UserContext);
-
-  const [dropdownPopovershow, setDropdownPopoverShow] = useState(false);
 
   const signInWithGoogle = async () => {
     const response = await signInWithPopup(auth, provider);
@@ -21,6 +25,16 @@ export default function Header() {
       name: response.user.displayName,
       profilePhoto: response.user.photoURL,
       isAuth: true,
+    };
+    setUser(u);
+    localStorage.setItem("user", JSON.stringify(u));
+  };
+  const logOut = async () => {
+    const u: User = {
+      userId: "",
+      name: "",
+      profilePhoto: "",
+      isAuth: false,
     };
     setUser(u);
     localStorage.setItem("user", JSON.stringify(u));
@@ -38,16 +52,44 @@ export default function Header() {
       </h1>
       <div className="">
         {user.isAuth ? (
-          <div className="flex flex-row flex-grow-0 w-[5rem] h-auto rounded-full bg-white">
-            <img
-              src={
-                user.profilePhoto === "" || user.profilePhoto === null
-                  ? Generic
-                  : user.profilePhoto
-              }
-              className="w-[3rem] h-auto rounded-full"
-            />
-          </div>
+          <Menu>
+            <MenuButton>
+              <div className="flex flex-row flex-grow-0 w-[5rem] h-auto rounded-full bg-white">
+                <img
+                  src={
+                    user.profilePhoto === "" || user.profilePhoto === null
+                      ? Generic
+                      : user.profilePhoto
+                  }
+                  className="w-[3rem] h-auto rounded-full"
+                />
+              </div>
+            </MenuButton>
+            <Transition
+              enter="transition ease-out duration-75"
+              enterFrom="opacity-0 scale-95"
+              enterTo="opacity-100 scale-100"
+              leave="transition ease-in duration-100"
+              leaveFrom="opacity-100 scale-100"
+              leaveTo="opacity-0 scale-95"
+            >
+              <MenuItems
+                anchor="bottom end"
+                className="w-52 origin-top-right rounded-xl border border-white/5 bg-white/5 p-1 text-sm/6 text-white [--anchor-gap:var(--spacing-1)] focus:outline-none"
+              >
+                <MenuItem>
+                  <button
+                    onClick={() => {
+                      logOut();
+                    }}
+                    className="group flex w-full items-center gap-2 rounded-lg py-1.5 px-3 data-[focus]:bg-white/10"
+                  >
+                    Logout
+                  </button>
+                </MenuItem>
+              </MenuItems>
+            </Transition>
+          </Menu>
         ) : (
           <button
             onClick={() => signInWithGoogle()}

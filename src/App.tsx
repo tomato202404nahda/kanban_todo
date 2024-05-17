@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import Auth from "./pages/Auth/Auth";
+
 import KanbanPage from "./pages/KanbanPage/KanbanPage";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Header from "./components/general/Header";
@@ -25,7 +25,6 @@ function App() {
       path: "/",
       element: <LandingPage />,
     },
-    { path: "/auth", element: <Auth /> },
     {
       path: "/kanban",
       element: <KanbanPage />,
