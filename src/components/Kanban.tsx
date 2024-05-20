@@ -3,7 +3,7 @@ import KanbanColumn from "./KanbanColumn";
 import { Card } from "../globals/types";
 import DeleteArea from "./DeleteArea";
 import { UserContext } from "../App";
-import { onValue, push, ref, set } from "firebase/database";
+import { onValue, ref, set } from "firebase/database";
 import { db } from "../config/firebase.config";
 
 export default function Kanban() {
@@ -14,11 +14,8 @@ export default function Kanban() {
   useEffect(() => {
     if (check) {
       try {
-        const usersRef = ref(db, "users");
-        const newDataRef = push(usersRef);
-
-        set(newDataRef, {
-          uid: user.userId,
+        set(ref(db, "todos/" + user.userId), {
+          cards: cards,
         });
       } catch (error) {
         console.log(error);
@@ -28,14 +25,23 @@ export default function Kanban() {
   }, [cards]);
 
   useEffect(() => {
-    const cardDataRef = ref(db, "kanbans/" + JSON.stringify(user.userId));
-    let cardData: Card[] | null = null;
-    console.log(cardDataRef);
-    onValue(cardDataRef, (snaps) => {
-      cardData = JSON.parse(snaps.val());
+    const cardDataRef = ref(db, "todos/" + user.userId);
+
+    onValue(cardDataRef, (snapshot) => {
+      const data = snapshot.val().cards;
+      const cardData = Object.keys(data).map((key) => {
+        return {
+          id: key,
+          title: data[key].title,
+          column: data[key].column,
+        };
+      });
+      console.log(cardData);
+      setCards(cardData ? cardData : []);
     });
 
-    setCards(cardData ? cardData : []);
+    // console.log(cardData);
+    // setCards(cardData ? cardData : []);
     setCheck(true);
   }, []);
 
