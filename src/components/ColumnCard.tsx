@@ -3,7 +3,7 @@ import { Card } from "../globals/types";
 import DropIndicator from "./DropIndicator";
 type Props = {
   card: Card;
-  handleDragStart: (e: React.DragEvent<HTMLDivElement>, card: Card) => void;
+  handleDragStart: (e, card: Card) => void;
 };
 export default function ColumnCard(props: Props) {
   return (
