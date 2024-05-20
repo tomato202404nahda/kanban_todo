@@ -3,7 +3,7 @@ import { UserContext } from "../../App";
 import { useNavigate } from "react-router-dom";
 
 export default function LandingPage() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const navigator = useNavigate();
 
   useEffect(() => {

@@ -7,7 +7,7 @@ import { onValue, ref, set } from "firebase/database";
 import { db } from "../config/firebase.config";
 
 export default function Kanban() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [cards, setCards] = useState<Card[]>([]);
   const [check, setCheck] = useState(false);
 
