@@ -5,11 +5,8 @@ import React from "react";
 type Props = {
   card: Card;
   handleDragStart: (
-    e:
-      | React.MouseEvent<HTMLDivElement>
-      | MouseEvent
-      | TouchEvent
-      | PointerEvent,
+    e: React.MouseEvent<HTMLDivElement>,
+
     card: Card
   ) => void;
 };
