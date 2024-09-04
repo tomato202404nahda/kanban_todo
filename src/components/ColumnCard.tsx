@@ -1,11 +1,11 @@
 import { motion } from "framer-motion";
 import { Card } from "../globals/types";
 import DropIndicator from "./DropIndicator";
-import React from "react";
+
 type Props = {
   card: Card;
   handleDragStart: (
-    e: React.DragEvent<HTMLDivElement>,
+    e,
 
     card: Card
   ) => void;
