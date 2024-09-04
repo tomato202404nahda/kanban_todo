@@ -5,7 +5,7 @@ import React from "react";
 type Props = {
   card: Card;
   handleDragStart: (
-    e: React.MouseEvent<HTMLDivElement>,
+    e: React.DragEvent<HTMLDivElement>,
 
     card: Card
   ) => void;
