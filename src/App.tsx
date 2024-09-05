@@ -3,8 +3,10 @@ import { Route, Routes } from "react-router-dom";
 import KanbanPage from "./pages/KanbanPage/KanbanPage";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Header from "./components/general/Header";
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { User } from "./globals/types";
+import { generateToken } from "./config/firebase.config";
+// import { onMessage } from "firebase/messaging";
 
 export const UserContext = createContext<{
   user: User;
@@ -20,6 +22,12 @@ export const UserContext = createContext<{
 });
 
 function App() {
+  useEffect(() => {
+    generateToken();
+    // onMessage(messaging, (payload) => {
+    //   console.log(payload);
+    // });
+  }, []);
   const router = [
     {
       path: "/",
@@ -51,7 +59,7 @@ function App() {
   };
   return (
     <UserContext.Provider value={userProviderValue}>
-      <div className="flex flex-col max-w-screen w-full h-screen bg-indigo-900">
+      <div className='flex flex-col max-w-screen w-full h-screen bg-indigo-900'>
         <Header />
         <Routes>
           {router.map((r) => {

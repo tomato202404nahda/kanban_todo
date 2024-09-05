@@ -1,7 +1,9 @@
-import { BackgroundSyncPlugin } from "workbox-background-sync";
 import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
-import { NavigationRoute, Route, registerRoute } from "workbox-routing";
-import { CacheFirst, NetworkFirst, NetworkOnly } from "workbox-strategies";
+import { initializeApp } from "firebase/app";
+
+import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
+// import { NavigationRoute, Route, registerRoute } from "workbox-routing";
+// import { CacheFirst, NetworkFirst } from "workbox-strategies";
 
 declare let self: ServiceWorkerGlobalScope;
 
@@ -9,62 +11,80 @@ cleanupOutdatedCaches();
 
 precacheAndRoute(self.__WB_MANIFEST);
 
-self.skipWaiting();
+self.addEventListener("install", () => self.skipWaiting());
+self.addEventListener("activate", () => self.clients.claim());
 
-// cache images
-const imageRoute = new Route(
-  ({ request, sameOrigin }) => {
-    return sameOrigin && request.destination === "image";
-  },
-  new CacheFirst({
-    cacheName: "images",
-  })
-);
-registerRoute(imageRoute);
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_DATABASE_URL,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+};
 
-// cache api calls
-const fetchTasksRoute = new Route(
-  ({ request }) => {
-    return request.url === import.meta.env.VITE_API_BASE_URL + "/tasks";
-  },
-  new NetworkFirst({
-    cacheName: "api/fetch-tasks",
-  })
-);
-registerRoute(fetchTasksRoute);
+// Initialize Firebase
+export const app = initializeApp(firebaseConfig);
 
-// cache navigations
-const navigationRoute = new NavigationRoute(
-  new NetworkFirst({
-    cacheName: "navigation",
-    networkTimeoutSeconds: 3,
-  })
-);
-registerRoute(navigationRoute);
+const messaging = getMessaging();
 
-//  background sync
-const bgSyncPlugin = new BackgroundSyncPlugin("backgroundSyncQueue", {
-  maxRetentionTime: 24 * 60,
+onBackgroundMessage(messaging, (payload) => {
+  console.log(
+    "[firebase-messaging-sw.js] Received background message ",
+    payload
+  );
+  // Customize notification here
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: payload.notification.icon,
+  };
+  self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
-const taskSubmitRoute = new Route(
-  ({ request }) => {
-    return request.url === import.meta.env.VITE_API_BASE_URL + "/task/create";
-  },
-  new NetworkOnly({
-    plugins: [bgSyncPlugin],
-  }),
-  "POST"
-);
-registerRoute(taskSubmitRoute);
+// // cache images
+// const imageRoute = new Route(
+//   ({ request, sameOrigin }) => {
+//     return sameOrigin && request.destination === "image";
+//   },
+//   new CacheFirst({
+//     cacheName: "images",
+//   })
+// );
+// registerRoute(imageRoute);
 
-const editTaskRoute = new Route(
-  ({ request }) => {
-    return request.url.includes(import.meta.env.VITE_API_BASE_URL + "/task");
-  },
-  new NetworkOnly({
-    plugins: [bgSyncPlugin],
-  }),
-  "PATCH"
-);
-registerRoute(editTaskRoute);
+// // cache api calls
+
+// // cache navigations
+// const navigationRoute = new NavigationRoute(
+//   new NetworkFirst({
+//     cacheName: "navigation",
+//     networkTimeoutSeconds: 3,
+//   })
+// );
+// registerRoute(navigationRoute);
+
+// // Receive push notifications
+// self.addEventListener("push", function (e) {
+//   if (e.data) {
+//     const message = e.data.json();
+//     e.waitUntil(
+//       self.registration.showNotification(message.title, {
+//         body: message.body,
+//         icon: message.icon,
+//       })
+//     );
+//   }
+// });
+
+// // Click and open notification
+// self.addEventListener(
+//   "notificationclick",
+//   function (event) {
+//     event.notification.close();
+
+//     self.clients.openWindow("/farm");
+//   },
+//   false
+// );
