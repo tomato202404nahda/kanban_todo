@@ -26,7 +26,7 @@ function App() {
     if (Notification.permission === "default") {
       Notification.requestPermission().then().catch();
     }
-    console.log(generateToken());
+    generateToken();
   }, []);
   const router = [
     {
