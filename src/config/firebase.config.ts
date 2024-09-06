@@ -27,10 +27,32 @@ export const db = getDatabase(app);
 export const messaging = getMessaging(app);
 
 export const generateToken = async () => {
-  const token = await getToken(messaging, {
-    vapidKey:
-      "BM1BLaEpXPqvpxNZCiH2ugjed1lwdECBY8Ce4lbjL5AQXC_0JFxZ0_qB9bXTpv8o7AUs1ffC2JD5DVzhXu5Zg2o",
-  });
-  console.log(token);
-  return token;
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register(
+        "sw.ts",
+        {
+          type: "module",
+        }
+        // import.meta.env.MODE === "production" ? "/sw.tss" : "/dev-sw.js?dev-sw",
+        // { type: import.meta.env.MODE === "production" ? "classic" : "module" }
+      )
+      .then((registration) => {
+        getToken(messaging, {
+          vapidKey:
+            "BM1BLaEpXPqvpxNZCiH2ugjed1lwdECBY8Ce4lbjL5AQXC_0JFxZ0_qB9bXTpv8o7AUs1ffC2JD5DVzhXu5Zg2o",
+          serviceWorkerRegistration: registration,
+        }).then((currentToken) => {
+          return currentToken;
+        });
+      });
+  }
+  return;
+  // const token = await getToken(messaging, {
+  //   vapidKey:
+  //     ,
+  //   serviceWorkerRegistration: "",
+  // });
+  // console.log(token);
+  // return token;
 };
