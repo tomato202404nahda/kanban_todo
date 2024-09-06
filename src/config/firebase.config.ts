@@ -29,12 +29,8 @@ export const messaging = getMessaging(app);
 export const generateToken = async () => {
   if ("serviceWorker" in navigator) {
     const registration = await navigator.serviceWorker.register(
-      "/src/sw.ts",
-      {
-        type: "module",
-      }
-      // import.meta.env.MODE === "production" ? "/sw.tss" : "/dev-sw.js?dev-sw",
-      // { type: import.meta.env.MODE === "production" ? "classic" : "module" }
+      import.meta.env.MODE === "production" ? "/sw.js" : "/dev-sw.js?dev-sw",
+      { type: import.meta.env.MODE === "production" ? "classic" : "module" }
     );
 
     const token = await getToken(messaging, {
