@@ -5,7 +5,7 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import Header from "./components/general/Header";
 import { createContext, useEffect, useState } from "react";
 import { User } from "./globals/types";
-// import { generateToken } from "./config/firebase.config";
+import { generateToken } from "./config/firebase.config";
 // import { onMessage } from "firebase/messaging";
 
 export const UserContext = createContext<{
@@ -24,8 +24,9 @@ export const UserContext = createContext<{
 function App() {
   useEffect(() => {
     if (Notification.permission === "default") {
-      Notification.requestPermission();
+      Notification.requestPermission().then().catch();
     }
+    console.log(generateToken());
   }, []);
   const router = [
     {
