@@ -14,7 +14,7 @@ export default defineConfig({
       },
       strategies: "injectManifest",
       injectRegister: null,
-      srcDir: "src",
+
       filename: "sw.ts",
       workbox: {
         sourcemap: true,
