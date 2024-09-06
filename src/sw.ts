@@ -1,6 +1,12 @@
-import { cleanupOutdatedCaches, precacheAndRoute } from "workbox-precaching";
-import { initializeApp } from "firebase/app";
+import {
+  cleanupOutdatedCaches,
+  createHandlerBoundToURL,
+  precacheAndRoute,
+} from "workbox-precaching";
+import { clientsClaim } from "workbox-core";
+import { NavigationRoute, registerRoute } from "workbox-routing";
 
+import { initializeApp } from "firebase/app";
 import { getMessaging, onBackgroundMessage } from "firebase/messaging/sw";
 // import { NavigationRoute, Route, registerRoute } from "workbox-routing";
 // import { CacheFirst, NetworkFirst } from "workbox-strategies";
@@ -10,9 +16,15 @@ declare let self: ServiceWorkerGlobalScope;
 cleanupOutdatedCaches();
 
 precacheAndRoute(self.__WB_MANIFEST);
+let allowlist;
+if (import.meta.env.DEV) {
+  allowlist = [/^\/$/];
+}
 
-self.addEventListener("install", () => self.skipWaiting());
-self.addEventListener("activate", () => self.clients.claim());
+// to allow work offline
+registerRoute(
+  new NavigationRoute(createHandlerBoundToURL("index.html"), { allowlist })
+);
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -42,6 +54,9 @@ onBackgroundMessage(messaging, (payload) => {
   };
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
+
+self.skipWaiting();
+clientsClaim();
 
 // // cache images
 // const imageRoute = new Route(

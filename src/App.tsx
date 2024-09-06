@@ -3,9 +3,9 @@ import { Route, Routes } from "react-router-dom";
 import KanbanPage from "./pages/KanbanPage/KanbanPage";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Header from "./components/general/Header";
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 import { User } from "./globals/types";
-import { generateToken } from "./config/firebase.config";
+// import { generateToken } from "./config/firebase.config";
 // import { onMessage } from "firebase/messaging";
 
 export const UserContext = createContext<{
@@ -22,12 +22,12 @@ export const UserContext = createContext<{
 });
 
 function App() {
-  useEffect(() => {
-    generateToken();
-    // onMessage(messaging, (payload) => {
-    //   console.log(payload);
-    // });
-  }, []);
+  // useEffect(() => {
+  //   generateToken();
+  //   // onMessage(messaging, (payload) => {
+  //   //   console.log(payload);
+  //   // });
+  // }, []);
   const router = [
     {
       path: "/",

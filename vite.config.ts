@@ -9,11 +9,18 @@ export default defineConfig({
     VitePWA({
       devOptions: {
         enabled: true,
+        type: "module",
+        navigateFallback: "index.html",
       },
       strategies: "injectManifest",
+      injectRegister: null,
       srcDir: "src",
       filename: "sw.ts",
+      workbox: {
+        sourcemap: true,
+      },
       registerType: "autoUpdate",
+
       manifest: {
         name: "TODO App",
         short_name: "to.do",
